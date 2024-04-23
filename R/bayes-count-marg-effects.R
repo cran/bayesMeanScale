@@ -1,0 +1,100 @@
+
+bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_value, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
+
+  countMargErrorCheckF(model           = model,
+                       counts          = counts,
+                       marginal_effect = marginal_effect,
+                       at              = at,
+                       start_value     = start_value,
+                       end_value       = end_value,
+                       centrality      = centrality)
+
+  # initialize the model table and diff matrices list #
+
+  diffTable <- data.table()
+  diffDraws <- data.table()
+
+  # make the list of marginal effects, start values, and end values #
+
+  margList <- list(marg  = marginal_effect,
+                   start = start_value,
+                   end   = end_value)
+
+  # modify the model formula if there's an offset #
+
+  formulaNoOffsets <- modifyFormulaF(model = model)
+
+  for(i in 1:length(marginal_effect)){
+
+    # get the model data #
+
+    modData <- margModelDataF(model       = model,
+                              new_formula = formulaNoOffsets,
+                              at          = at,
+                              marg_list   = margList,
+                              i           = i)
+
+    # get the predictions #
+
+    predStart <- meanCountPredF(model       = model,
+                                counts      = counts,
+                                new_data    = modData$startData,
+                                draws       = n_draws,
+                                new_formula = formulaNoOffsets,
+                                at_means    = at_means,
+                                at          = at)
+
+    predEnd   <- meanCountPredF(model       = model,
+                                counts      = counts,
+                                new_data    = modData$endData,
+                                draws       = n_draws,
+                                new_formula = formulaNoOffsets,
+                                at_means    = at_means,
+                                at          = at)
+
+    # get the difference in predicted means #
+
+    predDiff <- countMeanDiffF(pred_start = predStart,
+                               pred_end   = predEnd,
+                               model_data = modData$modelData,
+                               marg_list  = margList,
+                               counts     = counts,
+                               at         = at,
+                               at_means   = at_means,
+                               i          = i)
+
+    # make the marginal effects tables #
+
+    diffTableTemp <- countMargTableF(pred_diff    = predDiff,
+                                     marg_list    = margList,
+                                     counts       = counts,
+                                     at           = at,
+                                     digits       = digits,
+                                     ci           = ci,
+                                     hdi_interval = hdi_interval,
+                                     centrality   = centrality,
+                                     at_means     = at_means,
+                                     i            = i)
+
+    # bind the model tables and difference matrices #
+
+    diffTable <- rbind(diffTable, diffTableTemp)
+    diffDraws <- rbind(diffDraws, predDiff)
+
+    }
+
+    # output #
+
+    diffList <- structure(list(diffDraws = diffDraws,
+                               diffTable = as.data.frame(diffTable)),
+                          class = c("bayes_mean_scale_marg", "list"),
+                          scale = "count_probs")
+
+
+    return(diffList)
+
+
+}
+
+
+

@@ -1,0 +1,229 @@
+---
+title: "Introduction to 'bayesMeanScale'"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Introduction to 'bayesMeanScale'}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  echo     = T,
+  eval     = T,
+  include  = T
+)
+```
+
+This vignette provides an overview of the `bayesMeanScale` package, which is designed to compute model predictions, marginal effects, and comparisons of marginal effects for several different fixed-effect generalized linear models fit using the `rstanarm` package (https://mc-stan.org/rstanarm/). In particular, these statistics are computed on the *mean* scale rather than the *link* scale for easier interpretation. For example, rather than working on the log-odds scale for a logistic regression, we focus on the probability scale.
+
+To get to the mean scale, `bayesMeanScale` takes a random sample with replacement from the joint posterior distribution. Then, this matrix is multiplied by the adjusted data matrix (adjusted according to your values of interest). Finally, the inverse link function is applied to transform the predictions to the mean scale.
+
+Predictions are computed by holding one or more explanatory variables fixed at particular values and either averaging over the rows of the data (average marginal predictions) or holding all other covariates at their means (marginal predictions at the mean). Marginal effects can also be calculated by averaging over the data (average marginal effect) or holding covariates at their means (marginal effect at the mean). 
+
+Currently, the effects can only be specified in terms of *discrete* changes. For a continuous variable, this might mean looking at the difference between the mean and the mean plus 1 standard deviation. In statistical applications, this sort of strategy is often very useful for summarizing a model. 
+
+The third workhorse function of the package compares marginal effects against each other. This is particularly useful for testing non-linear interaction effects such as those that appear in generalized linear models that do not use the *identity* link.
+
+## Predictions
+
+### Average marginal predictions
+
+The examples in this vignette use the `wells` data from the `rstanarm` package. Use `?rstanarm::wells` to view the documentation on this dataset. 
+
+For average marginal predictions, the goal is to get predictions at important settings of one or more of the model explanatory variables. These predictions are then averaged over the rows of the data. 
+
+```{r, results='hide', message=F}
+
+lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR', 'flextable'), function(x) base::library(x, character.only=T))
+
+```
+
+```{r}
+
+# Simulate the data #
+
+data(wells)
+
+modelData <- wells %>%
+  mutate(assoc = if_else(assoc==1, 'Y', 'N'))
+
+binomialModel <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, 
+                          data    = modelData, 
+                          family  = binomial, 
+                          refresh = 0)
+
+```
+
+```{r}
+
+bayesPredsF(binomialModel, 
+            at = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")))
+
+
+```
+
+The output contains the unique values for the "at" variables, the posterior means, and the lower and upper bounds of the credible intervals. 
+
+### Marginal predictions at the mean
+
+For marginal predictions at the mean, the goal is essentially the same except that we want to hold the covariates at their means. In the example below, all explanatory variables except for "arsenic" are held at their means for the computation. Since "assoc" is a discrete variable, we hold it at the proportion of cases that equaled "Y".
+
+```{r}
+
+bayesPredsF(binomialModel, 
+            at       = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")), 
+            at_means = T)
+
+```
+
+The results are slightly different than the average marginal predictions. From a computational standpoint, setting "at_means" to "TRUE" makes for a substantially faster computation. For relatively small models, this speed advantage is likely trivial, but it can make a noticeable difference when working with big data models.
+
+### Average marginal predictions for count probabilities
+
+You can also get the predictions for the count probabilities from a poisson or negative binomial model. Here, rather than looking at the rate, or mean, parameter, we investigate the probabilities of particular counts. This is an effective approach for summarizing count models in more depth. 
+
+```{r}
+
+crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+
+poissonModel  <- stan_glm(sat ~ weight + width, 
+                          data    = crabs, 
+                          family  = poisson, 
+                          refresh = 0)
+
+bayesCountPredsF(poissonModel,
+                 counts = c(0,1,2),
+                 at     = list(weight=c(2,3,4)))
+
+```
+
+
+## Marginal effects
+
+### Average marginal effects
+
+The concept of average marginal effects is straightforward. We simply take two posterior distributions of average marginal predictions and subtract one from the other. In the example below, we see that the average expected probability of switching wells for families that had an arsenic level of 2.2 is roughly 27 percentage points greater than for a family that had an arsenic level of .82. 
+
+```{r}
+
+binomialAME <- bayesMargEffF(binomialModel,
+                             marginal_effect = 'arsenic',
+                             start_value     = 2.2,
+                             end_value       = .82)
+
+binomialAME
+head(binomialAME$diffDraws)
+
+```
+
+Also note that we can access the posterior distribution of the marginal effects. This can be useful for graphing purposes and to describe the marginal effect distributions in more detail.
+
+We can also compute multiple marginal effects. When doing so, it is necessary to specify the start and end values in a list.
+
+```{r}
+
+bayesMargEffF(binomialModel,
+              marginal_effect = c('arsenic', 'dist'),
+              start_value     = list(2.2, 64.041),
+              end_value       = list(.82, 21.117))
+
+```
+
+The "at" argument allows the user to specify particular values for one or more covariates, and they must be specified in a list. The example below specifies at values for "educ" given that we have an interaction between "dist" and "educ" in the model. If there is an interaction effect on the mean (probability) scale, we would expect the marginal effect of "dist" to be different at various levels of "educ." The final section will cover how to test these marginal effects against each other.
+
+```{r}
+
+binomialAMEInteraction <- bayesMargEffF(binomialModel,
+                                        marginal_effect = 'dist',
+                                        start_value     = 64.041,
+                                        end_value       = 21.117,
+                                        at              = list(educ=c(0, 5, 8)))
+
+binomialAMEInteraction
+
+```
+
+### Average marginal effects for count probabilities
+
+You can also get the marginal effects for the count probabilities from a poisson or negative binomial model. 
+
+```{r}
+
+countMarg <- bayesCountMargEffF(poissonModel,
+                                counts          = c(0,1,2),
+                                marginal_effect = 'width',
+                                start_value     = 25,
+                                end_value       = 20,
+                                at              = list(weight=c(2,3,4)))
+
+countMarg
+
+```
+
+
+### Marginal effects at the mean
+
+Marginal effects at the mean compute the differences while holding the covariates at their means. Like the marginal predictions at the mean, specifying "at_means=TRUE" allows for a much faster computation than specifying "at_means=F". 
+
+```{r}
+
+binomialMEMInteraction <- bayesMargEffF(binomialModel,
+                                        marginal_effect = 'dist',
+                                        start_value     = 64.041,
+                                        end_value       = 21.117,
+                                        at              = list(educ=c(0, 5, 8)),
+                                        at_means        = T)
+
+binomialMEMInteraction
+
+```
+
+
+## Comparing marginal effects
+
+After computing multiple marginal effects for a model, you might like to compare them against one another. The "bayesMargCompareF" function calculates tests for all the unique pairs of marginal effects that you computed with "bayesMargEffF". In the example below, we are able to investigate the interaction effect between "dist" and "educ". We see that the marginal effect of "dist" is meaningfully different at different levels of "educ".
+
+```{r}
+
+bayesMargCompareF(binomialAMEInteraction)
+
+```
+
+You can also compare the marginal effects on count probabilities, shown in the example below. 
+
+```{r}
+
+bayesMargCompareF(countMarg)
+
+```
+
+
+## List of models currently supported
+
+\
+
+```{r, echo=F}
+
+data.frame(Class  = rep("stanreg", 6),
+           Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson'),
+           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt")) %>%
+  qflextable()
+
+```
+
+## References
+
+Agresti, Alan. 2013. *Categorical Data Analysis*. Third Edition. New York: Wiley
+
+Long, J. Scott and Jeremy Freese. 2001. "Predicted Probabilities for Count Models." *Stata Journal* 1(1): 51-57.
+
+Long, J. Scott and Sarah A. Mustillo. 2018. "Using Predictions and Marginal Effects to Compare Groups in Regression Models for Binary Outcomes." *Sociological Methods & Research* 50(3): 1284-1320.
+
+Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Presenting Non-linear Interaction Effects." *Sociological Science* 6: 81-117. 
