@@ -23,6 +23,10 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
 
   formulaNoOffsets <- modifyFormulaF(model = model)
 
+  # get the draws #
+  
+  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
+  
   for(i in 1:length(marginal_effect)){
 
     # get the model data #
@@ -37,14 +41,14 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
 
     predStart <- meanPredF(model       = model,
                            new_data    = modData$startData,
-                           draws       = n_draws,
+                           draws       = draws,
                            new_formula = formulaNoOffsets,
                            at_means    = at_means,
                            at          = at)
 
     predEnd   <- meanPredF(model       = model,
                            new_data    = modData$endData,
-                           draws       = n_draws,
+                           draws       = draws,
                            new_formula = formulaNoOffsets,
                            at_means    = at_means,
                            at          = at)

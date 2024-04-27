@@ -1,10 +1,11 @@
-818d324fa867f4c6dbc0b9a4bf75ae9a *DESCRIPTION
+6c9630d686550ff251abbe69e7e7a5b5 *DESCRIPTION
 bd7aeca08ef02c326ba3c68655fc2f5d *NAMESPACE
-6651c0659ffeaf2f1b63b4854a7d3200 *R/bayes-count-marg-effects.R
-d618853e8388151978d98debd52eb1a1 *R/bayes-count-preds.R
+aa234651d96fc5e401fa60c4df0290d3 *NEWS.md
+6b55185a1b0eff0bfa8e8d6a03cb077d *R/bayes-count-marg-effects.R
+81376bdf0913e7e5f6dcb6c62039ef6d *R/bayes-count-preds.R
 98ac68bf887162b2aed5ff791d53f195 *R/bayes-marg-compare.R
-766a35b550036187c2386fbd82307d25 *R/bayes-marg-effects.R
-b63ab6bf0e48d05769391aa7253848ca *R/bayes-preds.R
+14195160022729466836462ef913f2d9 *R/bayes-marg-effects.R
+aa203ab2232a948ba06eaad61c41fa93 *R/bayes-preds.R
 04e3d2543de4c2118281764cb4d55681 *R/count-marg-effects-error-check.R
 5131cd4cedd1a62eca0a6b79f73a6e53 *R/count-marg-table.R
 141f393c24545ddb486a405c17fe2a29 *R/count-mean-diff.R
@@ -17,9 +18,9 @@ fc270c675da582bd4b013c75b3b5335a *R/marg-compare-error-check.R
 691c5aacdc0b453853416fb86cfc7541 *R/marg-effects-error-check.R
 57d55f5912c2bfba6d68488bd15e606f *R/marg-model-data.R
 d36773873aad2836cdfed4957330f90a *R/marg-table.R
-d94f8fbb464f8f382515e0b37017f99c *R/mean-count-pred.R
+96b6c882cc248a847f5a5b562474b48a *R/mean-count-pred.R
 f14ffb88758bcafcea42f613e2c364d4 *R/mean-diff.R
-f665df427d95849880c10a1c825c12d8 *R/mean-pred.R
+55e1aa8b04e49df830149db4384a1eb9 *R/mean-pred.R
 6856dd977d4666edd1eb562537143655 *R/modify-formula.R
 f6aa2c864135b20610a7973bfa845756 *R/new-value.R
 09558eb1eb158887d67c83d7b2747a13 *R/pred-table.R
@@ -30,7 +31,7 @@ b7c7371cc6520837b9ad9eb8e3b2bd28 *R/preds-error-check.R
 80b1fa82975390011eacbcc89fc16016 *build/vignette.rds
 f9bef290e3f9bb78b77fd7092e1ffab3 *inst/doc/introduction.R
 bd6596b89714edb535dea4595dd6f171 *inst/doc/introduction.Rmd
-cd49d2bb183350d83b86930fd2bcbfcf *inst/doc/introduction.html
+c92eaf8e39dd6e5b4947ab14a123901f *inst/doc/introduction.html
 c4c6787a2165d9eb61b51c4da24d7c13 *man/bayesCountMargEffF.Rd
 30a119c3d14ccac38bc53c034bf2ad46 *man/bayesCountPredsF.Rd
 606f62cac84b269848e960213542fae1 *man/bayesMargCompareF.Rd

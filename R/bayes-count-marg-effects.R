@@ -23,6 +23,10 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
   # modify the model formula if there's an offset #
 
   formulaNoOffsets <- modifyFormulaF(model = model)
+  
+  # get the draws #
+  
+  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
 
   for(i in 1:length(marginal_effect)){
 
@@ -39,7 +43,7 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
     predStart <- meanCountPredF(model       = model,
                                 counts      = counts,
                                 new_data    = modData$startData,
-                                draws       = n_draws,
+                                draws       = draws,
                                 new_formula = formulaNoOffsets,
                                 at_means    = at_means,
                                 at          = at)
@@ -47,7 +51,7 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
     predEnd   <- meanCountPredF(model       = model,
                                 counts      = counts,
                                 new_data    = modData$endData,
-                                draws       = n_draws,
+                                draws       = draws,
                                 new_formula = formulaNoOffsets,
                                 at_means    = at_means,
                                 at          = at)

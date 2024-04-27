@@ -43,13 +43,17 @@ bayesCountPredsF <- function(model, counts, at, n_draws=2000, ci=.95, hdi_interv
   dataCheckF(new_data    = newData,
              model_frame = modelDataOrg)
 
+  # get the draws #
+  
+  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
+  
   # get the predictions #
 
   preds <- meanCountPredF(model,
                           new_data    = newData,
                           counts      = counts,
                           at          = at,
-                          draws       = n_draws,
+                          draws       = draws,
                           new_formula = formulaNoOffsets,
                           at_means    = at_means)
 
