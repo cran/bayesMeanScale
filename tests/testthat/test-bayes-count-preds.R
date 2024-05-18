@@ -2,6 +2,10 @@
 
 test_that("make sure all configurations of bayesCountPredsF run without error", {
 
+  skip_on_cran()
+  skip_if_not_installed('rstanarm')
+  skip_if_not_installed('tibble')
+  
   expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
   expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
   expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
@@ -18,6 +22,10 @@ test_that("make sure all configurations of bayesCountPredsF run without error", 
 
 test_that("make sure all configurations of bayesCountPredsF run without warning", {
 
+  skip_on_cran()
+  skip_if_not_installed('rstanarm')
+  skip_if_not_installed('tibble')
+  
   expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
   expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
   expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))

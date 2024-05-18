@@ -73,6 +73,8 @@ Long, J. Scott and Jeremy Freese. 2001. "Predicted Probabilities for Count Model
 
 \donttest{
 
+if(require(rstanarm)){
+
 crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", 
                     header = TRUE)
 
@@ -86,6 +88,8 @@ bayesCountPredsF(poissonModel,
                  counts  = c(0,1),
                  at      = list(weight=c(2,3)),
                  n_draws = 500)
+                 
+}
                  
 }
 

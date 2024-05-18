@@ -1,3 +1,10 @@
+# bayesMeanScale 0.1.2
+
+### Bug fixes
+
+* Fixed R CMD check issue.
+* More robust handling of model data.
+
 # bayesMeanScale 0.1.1
 
 ### Bug fixes

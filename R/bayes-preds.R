@@ -14,11 +14,13 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
   if(!is.null(model$offset)){
     
     modelDataOrg <- model$data %>%
+      .[row.names(model$model),] %>%
       cbind(offset=model$offset)
     
   } else{
     
-    modelDataOrg <- model$data
+    modelDataOrg <- model$data %>%
+      .[row.names(model$model),]
     
   }
 
@@ -28,7 +30,6 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
   atVars    <- names(atValues)
 
   modelData <- modelDataOrg %>%
-    na.omit() %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%
     merge(atValues, all=T) %>%
     data.table::setDT()

@@ -10,16 +10,17 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
     if(!is.null(model$offset)){
       
       modelDataOrg <- model$data %>%
+        .[row.names(model$model),] %>%
         cbind(offset=model$offset)
       
     } else{
       
-      modelDataOrg <- model$data
+      modelDataOrg <- model$data %>%
+        .[row.names(model$model),]
       
     }
 
     modelData <- modelDataOrg %>%
-      na.omit() %>%
       .[, !(colnames(.) %in% atVars), drop=F] %>%
       merge(atValues, all=T) %>%
       data.table::setDT()

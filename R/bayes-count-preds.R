@@ -15,11 +15,13 @@ bayesCountPredsF <- function(model, counts, at, n_draws=2000, ci=.95, hdi_interv
   if(!is.null(model$offset)){
     
     modelDataOrg <- model$data %>%
+      .[row.names(model$model),] %>%
       cbind(offset=model$offset)
     
   } else{
     
-    modelDataOrg <- model$data
+    modelDataOrg <- model$data %>%
+      .[row.names(model$model),]
     
   }
 
@@ -29,7 +31,6 @@ bayesCountPredsF <- function(model, counts, at, n_draws=2000, ci=.95, hdi_interv
   atVars    <- names(atValues)
 
   modelData <- modelDataOrg %>%
-    na.omit() %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%
     merge(atValues, all=T) %>%
     data.table::setDT()

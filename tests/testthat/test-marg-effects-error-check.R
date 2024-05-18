@@ -1,13 +1,17 @@
 
 
-testData <- data.frame(
-  y = rnorm(10),
-  a = rnorm(10)
-)
-
-freqModel <- lm(y ~ a, data=testData)
-
 test_that("make sure margErrorCheckF is catching errors", {
+  
+  skip_on_cran()
+  skip_if_not_installed('rstanarm')
+  skip_if_not_installed('tibble')
+  
+  testData <- data.frame(
+    y = rnorm(10),
+    a = rnorm(10)
+  )
+  
+  freqModel <- lm(y ~ a, data=testData)
 
   expect_error(margErrorCheckF(logitModel, marginal_effect='educ', at=NULL, start_value=c(0, 5), end_value=c(10)), regexp="The arguments for 'marginal_effect,' 'start_value,' and 'end_value' must all have the same length!")
   expect_error(margErrorCheckF(freqModel, marginal_effect='a', at=NULL, start_value=1, end_value=2), regexp="The model must be a 'stanreg' object!")

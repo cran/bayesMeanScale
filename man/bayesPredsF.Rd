@@ -74,6 +74,8 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 
 ## Logit model ##
 
+if(require(rstanarm)){
+
 m1 <- rstanarm::stan_glm(switch ~ dist + educ + arsenic + assoc, 
                          data    = rstanarm::wells, 
                          family  = binomial, 
@@ -86,6 +88,8 @@ bayesPredsF(m1,
             at       = list(arsenic = c(.82, 1.3)), 
             at_means = TRUE,
             n_draws  = 500)
+         
+}
             
 }
 
