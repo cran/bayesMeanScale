@@ -2,6 +2,8 @@
 
 test_that("make sure dataCheckF detects errors", {
   
+  skip_on_cran()
+  
   newData        <- data.frame(x = factor(c('A', 'B')))
   modelFrameData <- data.frame(x = factor(c('A', 'A')))
   

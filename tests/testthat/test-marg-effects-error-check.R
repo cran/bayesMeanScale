@@ -4,7 +4,6 @@ test_that("make sure margErrorCheckF is catching errors", {
   
   skip_on_cran()
   skip_if_not_installed('rstanarm')
-  skip_if_not_installed('tibble')
   
   testData <- data.frame(
     y = rnorm(10),

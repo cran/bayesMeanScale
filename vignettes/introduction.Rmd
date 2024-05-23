@@ -13,12 +13,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, message=F, warning=F, include = FALSE}
 knitr::opts_chunk$set(
   echo     = T,
   eval     = T,
   include  = T
 )
+
+if(!require('rstanarm', quietly=T) ||
+   !require('flextable', quietly=T)){
+  knitr::opts_chunk$set(eval=F)
+}
+
 ```
 
 This vignette provides an overview of the `bayesMeanScale` package, which is designed to compute model predictions, marginal effects, and comparisons of marginal effects for several different fixed-effect generalized linear models fit using the `rstanarm` package (https://mc-stan.org/rstanarm/). In particular, these statistics are computed on the *mean* scale rather than the *link* scale for easier interpretation. For example, rather than working on the log-odds scale for a logistic regression, we focus on the probability scale.
@@ -41,7 +47,7 @@ For average marginal predictions, the goal is to get predictions at important se
 
 ```{r, results='hide', message=F}
 
-lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR', 'flextable'), function(x) base::library(x, character.only=T))
+lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr'), function(x) library(x, character.only=T))
 
 ```
 
@@ -49,10 +55,8 @@ lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR', 'flextable'), func
 
 # Simulate the data #
 
-data(wells)
-
-modelData <- wells %>%
-  mutate(assoc = if_else(assoc==1, 'Y', 'N'))
+modelData       <- rstanarm::wells
+modelData$assoc <- ifelse(modelData$assoc==1, 'Y', 'N')
 
 binomialModel <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, 
                           data    = modelData, 

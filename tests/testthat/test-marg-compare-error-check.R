@@ -4,7 +4,6 @@ test_that("make sure margCompareErrorCheckF is catching errors", {
   
   skip_on_cran()
   skip_if_not_installed('rstanarm')
-  skip_if_not_installed('tibble')
   
   margTestError   <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4)
   margTestNoError <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4, at=list(dist=c(20, 30)))

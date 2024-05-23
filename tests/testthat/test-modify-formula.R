@@ -2,6 +2,8 @@
 
 test_that("make sure modifyFormula is handling offsets correctly", {
   
+  skip_on_cran()
+  
   testData <- data.frame(
     a = rnorm(10),
     b = rnorm(10, mean=100),

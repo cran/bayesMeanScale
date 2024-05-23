@@ -1,23 +1,27 @@
-## ----include = FALSE----------------------------------------------------------
+## ----message=F, warning=F, include = FALSE------------------------------------
 knitr::opts_chunk$set(
   echo     = T,
   eval     = T,
   include  = T
 )
 
+if(!require('rstanarm', quietly=T) ||
+   !require('flextable', quietly=T)){
+  knitr::opts_chunk$set(eval=F)
+}
+
+
 ## ----results='hide', message=F------------------------------------------------
 
-lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR', 'flextable'), function(x) base::library(x, character.only=T))
+lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr'), function(x) library(x, character.only=T))
 
 
 ## -----------------------------------------------------------------------------
 
 # Simulate the data #
 
-data(wells)
-
-modelData <- wells %>%
-  mutate(assoc = if_else(assoc==1, 'Y', 'N'))
+modelData       <- rstanarm::wells
+modelData$assoc <- ifelse(modelData$assoc==1, 'Y', 'N')
 
 binomialModel <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, 
                           data    = modelData, 

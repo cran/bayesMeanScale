@@ -4,7 +4,6 @@ test_that("test that bayesMargCompareF runs without error and without warning", 
   
   skip_on_cran()
   skip_if_not_installed('rstanarm')
-  skip_if_not_installed('tibble')
   
   m1AMEInteraction <- bayesMargEffF(logitModel,
                                     marginal_effect = 'dist',
