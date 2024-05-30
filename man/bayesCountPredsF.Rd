@@ -78,11 +78,11 @@ if(require(rstanarm)){
 crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", 
                     header = TRUE)
 
-poissonModel  <- rstanarm::stan_glm(sat ~ weight + width, 
-                                    data    = crabs, 
-                                    family  = poisson, 
-                                    refresh = 0,
-                                    iter    = 500)
+poissonModel  <- stan_glm(sat ~ weight + width, 
+                          data    = crabs, 
+                          family  = poisson, 
+                          refresh = 0,
+                          iter    = 500)
 
 bayesCountPredsF(poissonModel,
                  counts  = c(0,1),

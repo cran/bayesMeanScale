@@ -89,11 +89,11 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 
 if(require(rstanarm)){
 
-m1 <- rstanarm::stan_glm(switch ~ dist + educ + arsenic + assoc, 
-                         data    = rstanarm::wells, 
-                         family  = binomial, 
-                         refresh = 0, 
-                         iter    = 500)
+m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, 
+               data    = rstanarm::wells, 
+               family  = binomial, 
+               refresh = 0, 
+               iter    = 500)
 
 # marginal effect averaging over sample values of covariates #
 

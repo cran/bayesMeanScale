@@ -1,10 +1,26 @@
 
-set.seed(500)
 
 test_that("make sure bayesCountPredsF is working properly", {
 
   skip_on_cran()
   skip_if_not_installed('rstanarm')
+  
+  set.seed(200)
+  
+  crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+  
+  poissonModel  <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0, chains=2, iter=500))
+  negBinomModel <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, chains=2, iter=500))
+  
+  x     <- rnorm(2000, mean=3)
+  w     <- rnorm(2000, mean=2)
+  log_y <- .5 + .2*x - .2*w
+  y     <- rpois(2000, lambda=exp(log_y))
+  
+  poissonData <- data.frame(x, w, log_y, y)
+  
+  poissonModel2  <- suppressWarnings(rstanarm::stan_glm(y ~ x + w, data=poissonData, family=poisson, refresh=0, chains=2, iter=500))
+  negBinomModel2 <- suppressWarnings(rstanarm::stan_glm(y ~ x + w, data=poissonData, family=rstanarm::neg_binomial_2, refresh=0, chains=2, iter=500))
   
   expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
   expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))

@@ -1,4 +1,10 @@
 
+# bayesMeanScale 0.1.4
+
+### Bug fixes
+
+* Fixed R CMD check issue having to do with internal data.
+
 # bayesMeanScale 0.1.3
 
 ### Bug fixes

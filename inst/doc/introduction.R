@@ -5,11 +5,6 @@ knitr::opts_chunk$set(
   include  = T
 )
 
-if(!require('rstanarm', quietly=T) ||
-   !require('flextable', quietly=T)){
-  knitr::opts_chunk$set(eval=F)
-}
-
 
 ## ----results='hide', message=F------------------------------------------------
 
