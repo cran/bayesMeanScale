@@ -1,23 +1,8 @@
 
 
 countMargTableF <- function(pred_diff, marg_list, counts, at, digits, ci, hdi_interval, centrality, at_means, i){
-
-  if(centrality=='map'){
-    centrality <- "map_estimate"
-  }
   
   centralityF <- eval(parse(text=centrality))
-  
-  if(!is.null(at)){
-    
-    atVars <- names(expand.grid(at))
-    tableNames <- c(atVars, "count", 'marg_effect', 'start_val', 'end_val', centrality, 'lower', 'upper')
-    
-  } else{
-    
-    tableNames <- c("count", 'marg_effect', 'start_val', 'end_val', centrality, 'lower', 'upper')
-    
-  }
   
   if(!is.null(at)){
 
@@ -74,7 +59,7 @@ countMargTableF <- function(pred_diff, marg_list, counts, at, digits, ci, hdi_in
 
   }
   
-  names(diffTableTemp) <- tableNames
+  names(diffTableTemp)[names(diffTableTemp)=='centrality'] <- centrality
 
   return(diffTableTemp)
 

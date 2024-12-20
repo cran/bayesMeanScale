@@ -1,14 +1,13 @@
-## ----message=F, warning=F, include = FALSE------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   echo     = T,
   eval     = T,
   include  = T
 )
 
-
 ## ----results='hide', message=F------------------------------------------------
 
-lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr'), function(x) library(x, character.only=T))
+lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr', 'MASS'), function(x) base::library(x, character.only=T))
 
 
 ## -----------------------------------------------------------------------------
@@ -65,6 +64,16 @@ head(binomialAME$diffDraws)
 
 ## -----------------------------------------------------------------------------
 
+binomialAMEInstant <- bayesMargEffF(binomialModel,
+                                    marginal_effect = 'arsenic',
+                                    start_value     = 'instantaneous',
+                                    end_value       = 'instantaneous')
+
+binomialAMEInstant
+
+
+## -----------------------------------------------------------------------------
+
 bayesMargEffF(binomialModel,
               marginal_effect = c('arsenic', 'dist'),
               start_value     = list(2.2, 64.041),
@@ -75,8 +84,8 @@ bayesMargEffF(binomialModel,
 
 binomialAMEInteraction <- bayesMargEffF(binomialModel,
                                         marginal_effect = 'dist',
-                                        start_value     = 64.041,
-                                        end_value       = 21.117,
+                                        start_value     = 'instantaneous',
+                                        end_value       = 'instantaneous',
                                         at              = list(educ=c(0, 5, 8)))
 
 binomialAMEInteraction
@@ -116,11 +125,33 @@ bayesMargCompareF(binomialAMEInteraction)
 bayesMargCompareF(countMarg)
 
 
+## -----------------------------------------------------------------------------
+
+propOddsModel <- stan_polr(Sat ~ Infl + Type, 
+                           data    = housing, 
+                           prior   = rstanarm::R2(0.2, 'mean'),
+                           refresh = 0)
+
+bayesOrdinalPredsF(propOddsModel, 
+                   at = list(Type=c("Tower", "Apartment")))
+
+
+propOddsMarg <- bayesOrdinalMargEffF(propOddsModel, 
+                                     marginal_effect = "Infl", 
+                                     start_value     = "Low", 
+                                     end_value       = "High",  
+                                     at              = list(Type=c("Tower", "Apartment")))
+
+propOddsMarg
+
+bayesMargCompareF(propOddsMarg)
+
+
 ## ----echo=F-------------------------------------------------------------------
 
-data.frame(Class  = rep("stanreg", 6),
-           Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson'),
-           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt")) %>%
+data.frame(Class  = c(rep("stanreg", 6), "stanreg; polr"),
+           Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson', 'binomial'),
+           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt", 'logit; probit; cloglog')) %>%
   qflextable()
 
 

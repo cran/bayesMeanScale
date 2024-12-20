@@ -41,7 +41,7 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
   
   if(at_means==T & !is.null(at)){
 
-    atVars <- names(expand.grid(at))
+    atVars <- names(at)
 
     atVarsNew <- paste0(atVars, "_new")
     data.table::setnames(new_data, old=names(new_data[, ..atVars]), new=atVarsNew)

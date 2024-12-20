@@ -13,13 +13,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, message=F, warning=F, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   echo     = T,
   eval     = T,
   include  = T
 )
-
 ```
 
 This vignette provides an overview of the `bayesMeanScale` package, which is designed to compute model predictions, marginal effects, and comparisons of marginal effects for several different fixed-effect generalized linear models fit using the `rstanarm` package (https://mc-stan.org/rstanarm/). In particular, these statistics are computed on the *mean* scale rather than the *link* scale for easier interpretation. For example, rather than working on the log-odds scale for a logistic regression, we focus on the probability scale.
@@ -28,21 +27,19 @@ To get to the mean scale, `bayesMeanScale` takes a random sample with replacemen
 
 Predictions are computed by holding one or more explanatory variables fixed at particular values and either averaging over the rows of the data (average marginal predictions) or holding all other covariates at their means (marginal predictions at the mean). Marginal effects can also be calculated by averaging over the data (average marginal effect) or holding covariates at their means (marginal effect at the mean). 
 
-Currently, the effects can only be specified in terms of *discrete* changes. For a continuous variable, this might mean looking at the difference between the mean and the mean plus 1 standard deviation. In statistical applications, this sort of strategy is often very useful for summarizing a model. 
-
 The third workhorse function of the package compares marginal effects against each other. This is particularly useful for testing non-linear interaction effects such as those that appear in generalized linear models that do not use the *identity* link.
 
 ## Predictions
 
 ### Average marginal predictions
 
-The examples in this vignette use the `wells` data from the `rstanarm` package. Use `?rstanarm::wells` to view the documentation on this dataset. 
+The examples below use the `wells` data from the `rstanarm` package. Use `?rstanarm::wells` to view the documentation on this dataset. 
 
 For average marginal predictions, the goal is to get predictions at important settings of one or more of the model explanatory variables. These predictions are then averaged over the rows of the data. 
 
 ```{r, results='hide', message=F}
 
-lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr'), function(x) library(x, character.only=T))
+lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr', 'MASS'), function(x) base::library(x, character.only=T))
 
 ```
 
@@ -86,7 +83,7 @@ The results are slightly different than the average marginal predictions. From a
 
 ### Average marginal predictions for count probabilities
 
-You can also get the predictions for the count probabilities from a poisson or negative binomial model. Here, rather than looking at the rate, or mean, parameter, we investigate the probabilities of particular counts. This is an effective approach for summarizing count models in more depth. 
+You can also get the predictions for the count probabilities from a Poisson or negative binomial model. Here, rather than looking at the rate, or mean, parameter, we investigate the probabilities of particular counts. This is an effective approach for summarizing count models in more depth. 
 
 ```{r}
 
@@ -108,7 +105,7 @@ bayesCountPredsF(poissonModel,
 
 ### Average marginal effects
 
-The concept of average marginal effects is straightforward. We simply take two posterior distributions of average marginal predictions and subtract one from the other. In the example below, we see that the average expected probability of switching wells for families that had an arsenic level of 2.2 is roughly 27 percentage points greater than for a family that had an arsenic level of .82. 
+The concept of average marginal effects is straightforward. For *discrete* changes, we simply take two posterior distributions of average marginal predictions and subtract one from the other. In the example below, we see that the average expected probability of switching wells for families that had an arsenic level of 2.2 is roughly 27 percentage points greater than for a family that had an arsenic level of .82. 
 
 ```{r}
 
@@ -123,6 +120,20 @@ head(binomialAME$diffDraws)
 ```
 
 Also note that we can access the posterior distribution of the marginal effects. This can be useful for graphing purposes and to describe the marginal effect distributions in more detail.
+
+As an alternative to computing some discrete change in arsenic, we can approximate the average instantaneous rate of change by supplying "instantaneous" as our value for the "start_value" and "end_value" arguments. 
+
+```{r}
+
+binomialAMEInstant <- bayesMargEffF(binomialModel,
+                                    marginal_effect = 'arsenic',
+                                    start_value     = 'instantaneous',
+                                    end_value       = 'instantaneous')
+
+binomialAMEInstant
+
+```
+
 
 We can also compute multiple marginal effects. When doing so, it is necessary to specify the start and end values in a list.
 
@@ -141,8 +152,8 @@ The "at" argument allows the user to specify particular values for one or more c
 
 binomialAMEInteraction <- bayesMargEffF(binomialModel,
                                         marginal_effect = 'dist',
-                                        start_value     = 64.041,
-                                        end_value       = 21.117,
+                                        start_value     = 'instantaneous',
+                                        end_value       = 'instantaneous',
                                         at              = list(educ=c(0, 5, 8)))
 
 binomialAMEInteraction
@@ -151,7 +162,7 @@ binomialAMEInteraction
 
 ### Average marginal effects for count probabilities
 
-You can also get the marginal effects for the count probabilities from a poisson or negative binomial model. 
+You can also get the marginal effects for the count probabilities from a Poisson or negative binomial model. 
 
 ```{r}
 
@@ -203,6 +214,36 @@ bayesMargCompareF(countMarg)
 
 ```
 
+## Proportional odds models
+
+The examples below use the `housing` data from the `MASS` package. Use `?MASS::housing` to view the documentation on this dataset.
+
+We can also compute predictions, marginal effects, and comparisons of marginal effects for proportional odds models. Posterior means and credible intervals are computed with respect to each outcome of the response variable.
+
+```{r}
+
+propOddsModel <- stan_polr(Sat ~ Infl + Type, 
+                           data    = housing, 
+                           prior   = rstanarm::R2(0.2, 'mean'),
+                           refresh = 0)
+
+bayesOrdinalPredsF(propOddsModel, 
+                   at = list(Type=c("Tower", "Apartment")))
+
+
+propOddsMarg <- bayesOrdinalMargEffF(propOddsModel, 
+                                     marginal_effect = "Infl", 
+                                     start_value     = "Low", 
+                                     end_value       = "High",  
+                                     at              = list(Type=c("Tower", "Apartment")))
+
+propOddsMarg
+
+bayesMargCompareF(propOddsMarg)
+
+```
+
+
 
 ## List of models currently supported
 
@@ -210,9 +251,9 @@ bayesMargCompareF(countMarg)
 
 ```{r, echo=F}
 
-data.frame(Class  = rep("stanreg", 6),
-           Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson'),
-           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt")) %>%
+data.frame(Class  = c(rep("stanreg", 6), "stanreg; polr"),
+           Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson', 'binomial'),
+           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt", 'logit; probit; cloglog')) %>%
   qflextable()
 
 ```

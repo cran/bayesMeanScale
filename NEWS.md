@@ -1,13 +1,14 @@
 
-# bayesMeanScale 0.1.4
+# bayesMeanScale 0.2.0
 
-### Bug fixes
+* Compute instantaneous rates of change
+* Functionality for proportional odds models
+
+# bayesMeanScale 0.1.4
 
 * Fixed R CMD check issue having to do with internal data.
 
 # bayesMeanScale 0.1.3
-
-### Bug fixes
 
 * Fixed R CMD check issue.
 
@@ -15,7 +16,7 @@
 
 ### Bug fixes
 
-* Fixed R CMD check issue.
+* Fixed R CMD check issue for Linux distributions.
 * More robust handling of model data.
 
 # bayesMeanScale 0.1.1

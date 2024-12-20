@@ -1,24 +1,19 @@
 
 predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, centrality, digits, ci, at_means){
-
-  if(centrality=='map'){
-    centrality <- "map_estimate"
-  }
   
   centralityF <- eval(parse(text=centrality))
-  tableNames  <- c(at_vars, centrality, 'lower', 'upper')
   
   if(at_means==F){
 
-    # tack on the grouping values and get the means #
+    # tack on the grouping values, get the means by posterior draw, and shape to long format #
 
     predsNew <- preds %>%
       data.table::as.data.table() %>%
       cbind(model_data[, ..at_vars]) %>%
       .[, lapply(.SD, mean), by=at_vars, .SDcols=!at_vars] %>%
       data.table::melt(id.vars       = at_vars,
-           variable.name = 'which_pred',
-           value.name    = 'pred')
+                       variable.name = 'which_pred',
+                       value.name    = 'pred')
 
     # make the table #
 
@@ -40,14 +35,14 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
 
   } else{
 
-    # tack on the grouping values and get the means #
+    # tack on the grouping values and shape to long format #
 
     predsNew <- preds %>%
       data.table::as.data.table() %>%
       cbind(at_values) %>%
       data.table::melt(id.vars       = at_vars,
-           variable.name = 'which_pred',
-           value.name    = 'pred')
+                       variable.name = 'which_pred',
+                       value.name    = 'pred')
 
     # make the table #
 
@@ -69,7 +64,7 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
 
   }
   
-  names(predTable) <- tableNames
+  names(predTable)[names(predTable)=='centrality'] <- centrality
 
   return(predTable)
 

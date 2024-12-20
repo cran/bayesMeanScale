@@ -19,7 +19,8 @@ bayesCountMargEffF(model,
                    centrality      = 'mean',
                    digits          = 4,
                    at              = NULL,
-                   at_means        = FALSE)
+                   at_means        = FALSE,
+                   h               = .0001)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,13 +34,13 @@ Vector of counts to get the predicted probabilities for.
 A character vector of terms that you want to estimate the marginal effect for.
 }
 \item{start_value}{
-The start value(s) for the marginal effect(s). Must be a list when specifying multiple values.
+The start value(s) for the marginal effect(s). Must be a list when specifying multiple values. Specify "instantaneous" when you want to calculate an approximate instantaneous rate of change.
 }
 \item{end_value}{
-The end value(s) for the marginal effect(s). Must be a list when specifying multiple values.
+The end value(s) for the marginal effect(s). Must be a list when specifying multiple values. Specify "instantaneous" when you want to calculate an approximate instantaneous rate of change.
 }
 \item{n_draws}{
-The number of draws to take from the posterior distribution of the expectation.
+The number of draws to take from the joint posterior distribution.
 }
 \item{ci}{
 The level for the credible intervals.
@@ -58,6 +59,9 @@ Optional list of covariate values to estimate the marginal effect at.
 }
 \item{at_means}{
 If FALSE, the default, the marginal effects are averaged across the rows of the data. If TRUE, the covariate values that are not specified in the "at" argument are held at their means.
+}
+\item{h}{
+Step size for calculating the approximate instantaneous rate of change.
 }
 }
 \value{
@@ -106,9 +110,8 @@ bayesCountMargEffF(poissonModel,
                    end_value       = 20,
                    at_means        = TRUE,
                    n_draws         = 500)
-                   
-}
-                   
+
+}                
 }
 
 }

@@ -16,7 +16,8 @@ bayesCountPredsF(model,
                  hdi_interval = TRUE,
                  centrality   = 'mean',
                  digits       = 4,
-                 at_means     = FALSE)
+                 at_means     = FALSE,
+                 data_slice   = 'full')
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,7 +31,7 @@ Vector of counts to get the predicted probabilities for.
 List of covariate values to estimate the predictions at.
 }
 \item{n_draws}{
-The number of draws to take from the posterior distribution of the expectation.
+The number of draws to take from the joint posterior distribution.
 }
 \item{ci}{
 The level for the credible intervals.
@@ -46,6 +47,9 @@ The number of digits to report in the summary table.
 }
 \item{at_means}{
 If FALSE, the default, the predictions are averaged across the rows of the model data for each unique combination of "at" values. If TRUE, the covariate values that are not specified in the "at" argument are held at their means.
+}
+\item{data_slice}{
+The number of rows of data to average over for the predictions. Defaults to all rows. This can be useful for very large data sets. 
 }
 }
 \value{
@@ -88,9 +92,8 @@ bayesCountPredsF(poissonModel,
                  counts  = c(0,1),
                  at      = list(weight=c(2,3)),
                  n_draws = 500)
-                 
-}
-                 
+
+}            
 }
 
 }

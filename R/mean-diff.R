@@ -54,7 +54,7 @@ meanDiffF <- function(pred_start, pred_end, model_data, marg_list, at, at_means,
                            marg_effect = marg_list$marg[[i]])
     
   }
-
+  
   return(predDiff)
 
 }

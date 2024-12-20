@@ -75,8 +75,8 @@ m1Marg <- bayesMargEffF(m1,
 
 bayesMargCompareF(m1Marg)
 
-}
 
+}
 }
 
 }

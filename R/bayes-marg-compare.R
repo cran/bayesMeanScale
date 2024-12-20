@@ -12,7 +12,7 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
 
   # get the unique combos of marg effects and comparisons #
 
-  comboData <- unique(subset(drawData, select=-diff))
+  comboData <- unique(subset(drawData, select=-diff)) %>% as.data.frame(.)
 
   # initialize the diff table
 
@@ -21,10 +21,12 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
 
   for(i in 1:nrow(comboData)){
     for(j in 1:nrow(comboData)){
-
+      
       if(i==j){
         break
       }
+
+      if(comboCheckF(i, j, comboData, marg_list)==T){
 
       # specify the first and second comparisons #
 
@@ -44,10 +46,6 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
         names(comboTemp2) <- paste0(names(comboTemp2), "2")
 
         # make the table
-
-        if(centrality=='map'){
-          centrality <- "map_estimate"
-        }
         
         centralityF <- eval(parse(text=centrality))
         
@@ -70,10 +68,22 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
         }
         
         names(tempTable) <- c(centrality, 'lower', 'upper')
+        
+        margEffect       <- data.frame('marg_effect' = paste0(comboTemp1$marg_effect1, " (", comboTemp1$comparison1, ")"))
+        
+        comboTemp1New    <- comboTemp1[, !(colnames(comboTemp1) %in% c('comparison1', 'marg_effect1', 'count1', 'outcome1')), drop=F]
+        comboTemp2New    <- comboTemp2[, !(colnames(comboTemp2) %in% c('comparison2', 'marg_effect2', 'count2', 'outcome2')), drop=F]
 
         drawDistribution <- rbind(drawDistribution, drawDiffs)
-        drawDiffTable    <- cbind(comboTemp1, comboTemp2, tempTable)
+        
+        drawDiffTable    <- cbind(comboTemp1New, comboTemp2New) %>%
+          {if('count1' %in% names(comboTemp1)) cbind(., count=comboTemp1$count1) else .} %>%
+          {if('outcome1' %in% names(comboTemp1)) cbind(., outcome=comboTemp1$outcome1) else .} %>%
+          cbind(., margEffect, tempTable)
+        
         drawDiffTableBig <- rbind(drawDiffTableBig, drawDiffTable)
+        
+      }
 
   }}
 
@@ -81,7 +91,9 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
 
   drawDiff <- structure(list(diffDraws = drawDistribution,
                              diffTable = as.data.frame(drawDiffTableBig)),
-                        class = c("bayes_mean_scale_marg_compare", "list"))
+                        class        = c("bayesmeanscale_margcompare", "list"),
+                        ci           = ci,
+                        hdi_interval = hdi_interval)
   
   return(drawDiff)
 

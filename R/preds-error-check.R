@@ -22,11 +22,17 @@ predsErrorCheckF <- function(model, at, centrality){
   if(!model$family$link %in% c('logit', 'identity', 'inverse', 'log', 'cloglog', 'probit', 'sqrt')){
     stop('The link function of your model is not supported!')
   }
-
+  
+  # check that the 'at' value is supplied #
+  
+  if(missing(at)){
+    stop("You must supply at least 1 value for the 'at' argument!")
+  }
+  
   # check that the names for the at values are correct #
 
   if(!all(names(at) %in% names(model$model))){
-    stop("The names for the at values don't match up with the names in the model data!")
+    stop("The names for the 'at' values don't match up with the names in the model data!")
   }
   
   # check that the centrality measure is supported #

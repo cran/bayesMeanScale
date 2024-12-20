@@ -1,5 +1,4 @@
 
-
 test_that("make sure countPredsErrorCheckF is working correctly", {
   
   skip_on_cran()

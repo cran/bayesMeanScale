@@ -1,5 +1,6 @@
 
 
+
 test_that("make sure countMargErrorCheckF is working correctly", {
   
   skip_on_cran()

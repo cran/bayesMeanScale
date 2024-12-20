@@ -1,5 +1,5 @@
 
-bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_value, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
+bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_value, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001){
 
   countMargErrorCheckF(model           = model,
                        counts          = counts,
@@ -32,11 +32,24 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
 
     # get the model data #
 
-    modData <- margModelDataF(model       = model,
-                              new_formula = formulaNoOffsets,
-                              at          = at,
-                              marg_list   = margList,
-                              i           = i)
+    if(start_value[i]=="instantaneous"){
+      
+      modData <- margModelDataContinuousF(model       = model,
+                                          new_formula = formulaNoOffsets,
+                                          at          = at,
+                                          marg_list   = margList,
+                                          i           = i,
+                                          h           = h)
+      
+    } else{
+      
+      modData <- margModelDataF(model       = model,
+                                new_formula = formulaNoOffsets,
+                                at          = at,
+                                marg_list   = margList,
+                                i           = i)
+      
+    }
 
     # get the predictions #
 
@@ -58,14 +71,30 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
 
     # get the difference in predicted means #
 
-    predDiff <- countMeanDiffF(pred_start = predStart,
-                               pred_end   = predEnd,
-                               model_data = modData$modelData,
-                               marg_list  = margList,
-                               counts     = counts,
-                               at         = at,
-                               at_means   = at_means,
-                               i          = i)
+    if(start_value[i]=='instantaneous'){
+      
+      predDiff <- countMeanDiffContinuousF(pred_start = predStart,
+                                           pred_end   = predEnd,
+                                           model_data = modData$modelData,
+                                           marg_list  = margList,
+                                           counts     = counts,
+                                           at         = at,
+                                           at_means   = at_means,
+                                           i          = i,
+                                           h          = h)
+      
+    } else{
+      
+      predDiff <- countMeanDiffF(pred_start = predStart,
+                                 pred_end   = predEnd,
+                                 model_data = modData$modelData,
+                                 marg_list  = margList,
+                                 counts     = counts,
+                                 at         = at,
+                                 at_means   = at_means,
+                                 i          = i)
+      
+    }
 
     # make the marginal effects tables #
 
@@ -91,8 +120,13 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
 
     diffList <- structure(list(diffDraws = diffDraws,
                                diffTable = as.data.frame(diffTable)),
-                          class = c("bayes_mean_scale_marg", "list"),
-                          scale = "count_probs")
+                          class        = c("bayesmeanscale_marg", "list"),
+                          response     = "count_probability",
+                          at           = at,
+                          at_means     = at_means,
+                          n_draws      = n_draws,
+                          ci           = ci,
+                          hdi_interval = hdi_interval)
 
 
     return(diffList)
