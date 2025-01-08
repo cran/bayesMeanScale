@@ -76,12 +76,12 @@ bayesCountPredsF <- function(model, counts, at, n_draws=2000, ci=.95, hdi_interv
 
   predList <- structure(list(predDraws = preds,
                              predTable = as.data.frame(predTable)),
-                        class        = c("bayesmeanscale_pred", "list"),
-                        response     = "count_probability",
-                        at           = at,
-                        at_means     = at_means,
-                        n_draws      = n_draws,
-                        ci           = ci,
+                        class        = c("bayesmeanscale_pred", "list"), 
+                        response     = "count_probability", 
+                        at           = at, 
+                        at_means     = at_means, 
+                        n_draws      = n_draws, 
+                        ci           = ci, 
                         hdi_interval = hdi_interval)
   
   

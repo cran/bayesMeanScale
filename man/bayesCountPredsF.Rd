@@ -53,7 +53,7 @@ The number of rows of data to average over for the predictions. Defaults to all 
 }
 }
 \value{
-A list of class "bayes_mean_scale_pred" with the following components: 
+A list of class "bayesmeanscale_pred" with the following components: 
 
 \item{predTable}{
 summary table of the predictions
@@ -92,8 +92,9 @@ bayesCountPredsF(poissonModel,
                  counts  = c(0,1),
                  at      = list(weight=c(2,3)),
                  n_draws = 500)
-
-}            
+                 
+}
+                 
 }
 
 }

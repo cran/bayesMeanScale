@@ -28,7 +28,7 @@ predsErrorCheckF <- function(model, at, centrality){
   if(missing(at)){
     stop("You must supply at least 1 value for the 'at' argument!")
   }
-  
+
   # check that the names for the at values are correct #
 
   if(!all(names(at) %in% names(model$model))){

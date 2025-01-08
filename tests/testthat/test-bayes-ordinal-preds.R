@@ -24,12 +24,12 @@ test_that("make sure all configurations of bayesOrdinalPredsF run without error"
   expect_no_error(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), n_draws=500))
   expect_no_error(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), hdi_interval=F, n_draws=500))
   expect_no_error(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), at_means=T, n_draws=500))
-  expect_no_error(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), hdi_interval=F, at_means=T, n_draws=500))
+  expect_no_error(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), hdi_interval=F, at_means=T, n_draws=500, data_slice=100))
 
   expect_no_warning(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), n_draws=500))
   expect_no_warning(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), hdi_interval=F, n_draws=500))
   expect_no_warning(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), at_means=T, n_draws=500))
-  expect_no_warning(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), hdi_interval=F, at_means=T, n_draws=500))
+  expect_no_warning(bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower", "Apartment")), hdi_interval=F, at_means=T, n_draws=500, data_slice=100))
 
 logitPreds <- bayesOrdinalPredsF(ordinalModel, at=list(Type=c("Tower")), at_means=T, n_draws=500)$predDraws
 logitCheck <- rowSums(subset(logitPreds, select=c(Low, Medium, High)))

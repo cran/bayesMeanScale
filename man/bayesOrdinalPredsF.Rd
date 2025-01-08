@@ -49,7 +49,7 @@ The number of rows of data to average over for the predictions. Defaults to all 
 }
 }
 \value{
-A list of class "bayes_mean_scale_pred" with the following components: 
+A list of class "bayesmeanscale_pred" with the following components: 
 
 \item{predTable}{
 summary table of the predictions
@@ -60,7 +60,7 @@ posterior draws of the predictions
 
 }
 \details{
-Currently, the following links for fixed-effect ordinal models fit using "rstanarm" are supported: logit, probit, and clogclog.
+The following links for fixed-effect ordinal models fit using "rstanarm" are supported: logit, probit, and clogclog.
 }
 \author{
 David Dalenberg

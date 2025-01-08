@@ -5,7 +5,7 @@
 Bayesian marginal effects on count probabilities.
 }
 \description{
-Computes Bayesian marginal effects on count probabilities. Models must have a family of "poisson"" or "neg_binomial_2" and be fit using the "rstanarm" package. Marginal effects can be averaged over the values of the covariates in the data (average marginal effects), or the covariates can be held at their means (marginal effects at the means). Also, "at" values can be specified to fix covariates at particular values. The marginal effects must be specified in terms of discrete changes. When investigating continuous variables this might be specified as the change between the mean and 1 standard deviation above the mean, for example.
+Computes Bayesian marginal effects on count probabilities. Models must have a family of "poisson"" or "neg_binomial_2" and be fit using the "rstanarm" package. Marginal effects can be averaged over the values of the covariates in the data (average marginal effects), or the covariates can be held at their means (marginal effects at the means). Also, "at" values can be specified to fix covariates at particular values. The marginal effects can be specified in terms of discrete changes or instantaneous rates of change.
 }
 \usage{
 bayesCountMargEffF(model,
@@ -65,7 +65,7 @@ Step size for calculating the approximate instantaneous rate of change.
 }
 }
 \value{
-A list of class "bayes_mean_scale_marg" with the following components: 
+A list of class "bayesmeanscale_marg" with the following components: 
 
 \item{diffTable}{
 summary table of the marginal effects
@@ -110,8 +110,9 @@ bayesCountMargEffF(poissonModel,
                    end_value       = 20,
                    at_means        = TRUE,
                    n_draws         = 500)
-
-}                
+                   
+}
+                   
 }
 
 }

@@ -26,15 +26,15 @@ binomialModel <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc,
 ## -----------------------------------------------------------------------------
 
 bayesPredsF(binomialModel, 
-            at = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")))
+            at = list(arsenic = c(.82, 1.3, 2.2)))
 
 
 
 ## -----------------------------------------------------------------------------
 
 bayesPredsF(binomialModel, 
-            at       = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")), 
-            at_means = T)
+            at       = list(arsenic = c(.82, 1.3, 2.2)), 
+            at_means = TRUE)
 
 
 ## -----------------------------------------------------------------------------
@@ -110,7 +110,7 @@ binomialMEMInteraction <- bayesMargEffF(binomialModel,
                                         start_value     = 64.041,
                                         end_value       = 21.117,
                                         at              = list(educ=c(0, 5, 8)),
-                                        at_means        = T)
+                                        at_means        = TRUE)
 
 binomialMEMInteraction
 

@@ -60,12 +60,12 @@ binomialModel <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc,
 ```{r}
 
 bayesPredsF(binomialModel, 
-            at = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")))
+            at = list(arsenic = c(.82, 1.3, 2.2)))
 
 
 ```
 
-The output contains the unique values for the "at" variables, the posterior means, and the lower and upper bounds of the credible intervals. 
+The output contains the unique values for the "at" variable(s), the posterior means, and the lower and upper bounds of the credible intervals. 
 
 ### Marginal predictions at the mean
 
@@ -74,8 +74,8 @@ For marginal predictions at the mean, the goal is essentially the same except th
 ```{r}
 
 bayesPredsF(binomialModel, 
-            at       = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")), 
-            at_means = T)
+            at       = list(arsenic = c(.82, 1.3, 2.2)), 
+            at_means = TRUE)
 
 ```
 
@@ -180,7 +180,7 @@ countMarg
 
 ### Marginal effects at the mean
 
-Marginal effects at the mean compute the differences while holding the covariates at their means. Like the marginal predictions at the mean, specifying "at_means=TRUE" allows for a much faster computation than specifying "at_means=F". 
+Marginal effects at the mean compute the differences while holding the covariates at their means. Like the marginal predictions at the mean, specifying "at_means=TRUE" allows for a much faster computation than specifying "at_means=FALSE". 
 
 ```{r}
 
@@ -189,7 +189,7 @@ binomialMEMInteraction <- bayesMargEffF(binomialModel,
                                         start_value     = 64.041,
                                         end_value       = 21.117,
                                         at              = list(educ=c(0, 5, 8)),
-                                        at_means        = T)
+                                        at_means        = TRUE)
 
 binomialMEMInteraction
 
@@ -198,7 +198,7 @@ binomialMEMInteraction
 
 ## Comparing marginal effects
 
-After computing multiple marginal effects for a model, you might like to compare them against one another. The "bayesMargCompareF" function calculates tests for all the unique pairs of marginal effects that you computed with "bayesMargEffF". In the example below, we are able to investigate the interaction effect between "dist" and "educ". We see that the marginal effect of "dist" is meaningfully different at different levels of "educ".
+After computing multiple marginal effects for a model, you might like to compare them against one another. The "bayesMargCompareF" function calculates tests for the pairs of marginal effects that you computed with "bayesMargEffF". In the example below, we are able to investigate the interaction effect between "dist" and "educ". We see that the marginal effect of "dist" is meaningfully different at different levels of "educ".
 
 ```{r}
 

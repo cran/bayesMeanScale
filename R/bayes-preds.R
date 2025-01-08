@@ -73,12 +73,12 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
 
   predList <- structure(list(predDraws = preds,
                              predTable = as.data.frame(predTable)),
-                        class        = c("bayesmeanscale_pred", "list"),
-                        response     = "mean",
-                        at           = at,
-                        at_means     = at_means,
-                        n_draws      = n_draws,
-                        ci           = ci,
+                        class        = c("bayesmeanscale_pred", "list"), 
+                        response     = "mean", 
+                        at           = at, 
+                        at_means     = at_means, 
+                        n_draws      = n_draws, 
+                        ci           = ci, 
                         hdi_interval = hdi_interval)
   
   

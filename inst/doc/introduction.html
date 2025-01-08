@@ -1596,15 +1596,12 @@ binomialModel &lt;- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc
                           family  = binomial, 
                           refresh = 0)</code></pre>
 <pre class="r"><code>bayesPredsF(binomialModel, 
-            at = list(arsenic = c(.82, 1.3, 2.2), assoc=c(&quot;Y&quot;, &quot;N&quot;)))</code></pre>
-<pre><code>##  arsenic assoc   mean  lower  upper
-##     0.82     Y 0.4528 0.4222 0.4828
-##     1.30     Y 0.5341 0.5064 0.5617
-##     2.20     Y 0.6557 0.6250 0.6864
-##     0.82     N 0.4843 0.4562 0.5132
-##     1.30     N 0.5653 0.5415 0.5889
-##     2.20     N 0.6835 0.6585 0.7092</code></pre>
-<p>The output contains the unique values for the “at” variables, the
+            at = list(arsenic = c(.82, 1.3, 2.2)))</code></pre>
+<pre><code>##  arsenic   mean  lower  upper
+##     0.82 0.4710 0.4478 0.4940
+##     1.30 0.5524 0.5348 0.5714
+##     2.20 0.6722 0.6501 0.6967</code></pre>
+<p>The output contains the unique values for the “at” variable(s), the
 posterior means, and the lower and upper bounds of the credible
 intervals.</p>
 </div>
@@ -1616,15 +1613,12 @@ example below, all explanatory variables except for “arsenic” are held
 at their means for the computation. Since “assoc” is a discrete
 variable, we hold it at the proportion of cases that equaled “Y”.</p>
 <pre class="r"><code>bayesPredsF(binomialModel, 
-            at       = list(arsenic = c(.82, 1.3, 2.2), assoc=c(&quot;Y&quot;, &quot;N&quot;)), 
-            at_means = T)</code></pre>
-<pre><code>##  arsenic assoc   mean  lower  upper
-##     0.82     Y 0.4483 0.4146 0.4767
-##     1.30     Y 0.5335 0.5048 0.5638
-##     2.20     Y 0.6610 0.6289 0.6935
-##     0.82     N 0.4799 0.4507 0.5077
-##     1.30     N 0.5649 0.5381 0.5877
-##     2.20     N 0.6889 0.6600 0.7151</code></pre>
+            at       = list(arsenic = c(.82, 1.3, 2.2)), 
+            at_means = TRUE)</code></pre>
+<pre><code>##  arsenic   mean  lower  upper
+##     0.82 0.4667 0.4442 0.4917
+##     1.30 0.5516 0.5312 0.5695
+##     2.20 0.6768 0.6528 0.7018</code></pre>
 <p>The results are slightly different than the average marginal
 predictions. From a computational standpoint, setting “at_means” to
 “TRUE” makes for a substantially faster computation. For relatively
@@ -1649,15 +1643,15 @@ bayesCountPredsF(poissonModel,
                  counts = c(0,1,2),
                  at     = list(weight=c(2,3,4)))</code></pre>
 <pre><code>##  weight count   mean  lower  upper
-##       2     0 0.1107 0.0772 0.1491
-##       3     0 0.0334 0.0133 0.0583
-##       4     0 0.0089 0.0000 0.0326
-##       2     1 0.2377 0.1895 0.2828
-##       3     1 0.1077 0.0553 0.1535
-##       4     1 0.0342 0.0004 0.1013
-##       2     2 0.2602 0.2381 0.2707
-##       3     2 0.1799 0.1358 0.2213
-##       4     2 0.0722 0.0019 0.1689</code></pre>
+##       2     0 0.1106 0.0778 0.1459
+##       3     0 0.0333 0.0112 0.0601
+##       4     0 0.0087 0.0000 0.0325
+##       2     1 0.2379 0.1933 0.2833
+##       3     1 0.1077 0.0613 0.1659
+##       4     1 0.0338 0.0003 0.1028
+##       2     2 0.2607 0.2409 0.2707
+##       3     2 0.1801 0.1339 0.2235
+##       4     2 0.0720 0.0015 0.1694</code></pre>
 </div>
 </div>
 <div id="marginal-effects" class="section level2">
@@ -1678,16 +1672,16 @@ percentage points greater than for a family that had an arsenic level of
 
 binomialAME</code></pre>
 <pre><code>##  marg_effect start_val end_val   mean  lower  upper
-##      arsenic       2.2    0.82 0.2683 0.2149 0.3136</code></pre>
+##      arsenic       2.2    0.82 0.2672 0.2108 0.3122</code></pre>
 <pre class="r"><code>head(binomialAME$diffDraws)</code></pre>
 <pre><code>##         diff   comparison marg_effect
 ##        &lt;num&gt;       &lt;char&gt;      &lt;char&gt;
-## 1: 0.2194958 2.2 vs. 0.82     arsenic
-## 2: 0.2263655 2.2 vs. 0.82     arsenic
-## 3: 0.3009543 2.2 vs. 0.82     arsenic
-## 4: 0.2933862 2.2 vs. 0.82     arsenic
-## 5: 0.2507658 2.2 vs. 0.82     arsenic
-## 6: 0.2291384 2.2 vs. 0.82     arsenic</code></pre>
+## 1: 0.2415240 2.2 vs. 0.82     arsenic
+## 2: 0.2521268 2.2 vs. 0.82     arsenic
+## 3: 0.2230296 2.2 vs. 0.82     arsenic
+## 4: 0.2113227 2.2 vs. 0.82     arsenic
+## 5: 0.2427805 2.2 vs. 0.82     arsenic
+## 6: 0.2693588 2.2 vs. 0.82     arsenic</code></pre>
 <p>Also note that we can access the posterior distribution of the
 marginal effects. This can be useful for graphing purposes and to
 describe the marginal effect distributions in more detail.</p>
@@ -1701,8 +1695,8 @@ arguments.</p>
                                     end_value       = &#39;instantaneous&#39;)
 
 binomialAMEInstant</code></pre>
-<pre><code>##  marg_effect     start_val       end_val   mean  lower upper
-##      arsenic instantaneous instantaneous 0.2006 0.1595 0.244</code></pre>
+<pre><code>##  marg_effect     start_val       end_val   mean  lower  upper
+##      arsenic instantaneous instantaneous 0.1997 0.1596 0.2423</code></pre>
 <p>We can also compute multiple marginal effects. When doing so, it is
 necessary to specify the start and end values in a list.</p>
 <pre class="r"><code>bayesMargEffF(binomialModel,
@@ -1710,8 +1704,8 @@ necessary to specify the start and end values in a list.</p>
               start_value     = list(2.2, 64.041),
               end_value       = list(.82, 21.117))</code></pre>
 <pre><code>##  marg_effect start_val end_val    mean   lower   upper
-##      arsenic     2.200   0.820  0.2684  0.2166  0.3152
-##         dist    64.041  21.117 -0.0969 -0.1165 -0.0789</code></pre>
+##      arsenic     2.200   0.820  0.2690  0.2204  0.3193
+##         dist    64.041  21.117 -0.0963 -0.1136 -0.0755</code></pre>
 <p>The “at” argument allows the user to specify particular values for
 one or more covariates, and they must be specified in a list. The
 example below specifies at values for “educ” given that we have an
@@ -1728,8 +1722,8 @@ each other.</p>
 
 binomialAMEInteraction</code></pre>
 <pre><code>##  educ marg_effect     start_val       end_val    mean   lower   upper
-##     0        dist instantaneous instantaneous -0.0033 -0.0039 -0.0026
-##     5        dist instantaneous instantaneous -0.0022 -0.0027 -0.0018
+##     0        dist instantaneous instantaneous -0.0033 -0.0039 -0.0027
+##     5        dist instantaneous instantaneous -0.0022 -0.0026 -0.0017
 ##     8        dist instantaneous instantaneous -0.0015 -0.0021 -0.0010</code></pre>
 </div>
 <div id="average-marginal-effects-for-count-probabilities" class="section level3">
@@ -1745,63 +1739,63 @@ from a Poisson or negative binomial model.</p>
 
 countMarg</code></pre>
 <pre><code>##  weight count marg_effect start_val end_val    mean   lower  upper
-##       2     0       width        25      20 -0.0701 -0.2095 0.0567
-##       3     0       width        25      20 -0.0520 -0.1704 0.0113
-##       4     0       width        25      20 -0.0316 -0.1326 0.0012
-##       2     1       width        25      20 -0.0466 -0.1198 0.0631
-##       3     1       width        25      20 -0.0652 -0.1503 0.0324
-##       4     1       width        25      20 -0.0563 -0.1683 0.0041
-##       2     2       width        25      20  0.0178 -0.0081 0.0715
-##       3     2       width        25      20 -0.0206 -0.0658 0.0576
-##       4     2       width        25      20 -0.0483 -0.1158 0.0096</code></pre>
+##       2     0       width        25      20 -0.0672 -0.2106 0.0606
+##       3     0       width        25      20 -0.0495 -0.1624 0.0138
+##       4     0       width        25      20 -0.0295 -0.1296 0.0014
+##       2     1       width        25      20 -0.0452 -0.1170 0.0687
+##       3     1       width        25      20 -0.0632 -0.1498 0.0324
+##       4     1       width        25      20 -0.0540 -0.1659 0.0042
+##       2     2       width        25      20  0.0168 -0.0107 0.0673
+##       3     2       width        25      20 -0.0209 -0.0625 0.0605
+##       4     2       width        25      20 -0.0477 -0.1180 0.0090</code></pre>
 </div>
 <div id="marginal-effects-at-the-mean" class="section level3">
 <h3>Marginal effects at the mean</h3>
 <p>Marginal effects at the mean compute the differences while holding
 the covariates at their means. Like the marginal predictions at the
 mean, specifying “at_means=TRUE” allows for a much faster computation
-than specifying “at_means=F”.</p>
+than specifying “at_means=FALSE”.</p>
 <pre class="r"><code>binomialMEMInteraction &lt;- bayesMargEffF(binomialModel,
                                         marginal_effect = &#39;dist&#39;,
                                         start_value     = 64.041,
                                         end_value       = 21.117,
                                         at              = list(educ=c(0, 5, 8)),
-                                        at_means        = T)
+                                        at_means        = TRUE)
 
 binomialMEMInteraction</code></pre>
 <pre><code>##  educ marg_effect start_val end_val    mean   lower   upper
-##     0        dist    64.041  21.117 -0.1527 -0.1854 -0.1167
-##     5        dist    64.041  21.117 -0.1002 -0.1220 -0.0802
-##     8        dist    64.041  21.117 -0.0692 -0.0934 -0.0434</code></pre>
+##     0        dist    64.041  21.117 -0.1521 -0.1884 -0.1201
+##     5        dist    64.041  21.117 -0.1002 -0.1208 -0.0783
+##     8        dist    64.041  21.117 -0.0694 -0.0951 -0.0459</code></pre>
 </div>
 </div>
 <div id="comparing-marginal-effects" class="section level2">
 <h2>Comparing marginal effects</h2>
 <p>After computing multiple marginal effects for a model, you might like
 to compare them against one another. The “bayesMargCompareF” function
-calculates tests for all the unique pairs of marginal effects that you
-computed with “bayesMargEffF”. In the example below, we are able to
-investigate the interaction effect between “dist” and “educ”. We see
-that the marginal effect of “dist” is meaningfully different at
-different levels of “educ”.</p>
+calculates tests for the pairs of marginal effects that you computed
+with “bayesMargEffF”. In the example below, we are able to investigate
+the interaction effect between “dist” and “educ”. We see that the
+marginal effect of “dist” is meaningfully different at different levels
+of “educ”.</p>
 <pre class="r"><code>bayesMargCompareF(binomialAMEInteraction)</code></pre>
 <pre><code>##  educ1 educ2                         marg_effect   mean lower  upper
-##      5     0 dist (Instantaneous rate of change) 0.0011 5e-04 0.0016
-##      8     0 dist (Instantaneous rate of change) 0.0017 8e-04 0.0025
+##      5     0 dist (Instantaneous rate of change) 0.0011 6e-04 0.0015
+##      8     0 dist (Instantaneous rate of change) 0.0017 9e-04 0.0025
 ##      8     5 dist (Instantaneous rate of change) 0.0007 3e-04 0.0010</code></pre>
 <p>You can also compare the marginal effects on count probabilities,
 shown in the example below.</p>
 <pre class="r"><code>bayesMargCompareF(countMarg)</code></pre>
 <pre><code>##  weight1 weight2 count       marg_effect    mean   lower  upper
-##        3       2     0 width (25 vs. 20)  0.0181 -0.0363 0.0464
-##        4       2     0 width (25 vs. 20)  0.0385 -0.0468 0.0961
-##        4       3     0 width (25 vs. 20)  0.0204 -0.0096 0.0466
-##        3       2     1 width (25 vs. 20) -0.0186 -0.0530 0.0048
-##        4       2     1 width (25 vs. 20) -0.0096 -0.0773 0.0337
-##        4       3     1 width (25 vs. 20)  0.0089 -0.0331 0.0396
-##        3       2     2 width (25 vs. 20) -0.0384 -0.0860 0.0337
-##        4       2     2 width (25 vs. 20) -0.0662 -0.1507 0.0058
-##        4       3     2 width (25 vs. 20) -0.0277 -0.0806 0.0143</code></pre>
+##        3       2     0 width (25 vs. 20)  0.0177 -0.0353 0.0495
+##        4       2     0 width (25 vs. 20)  0.0376 -0.0501 0.0939
+##        4       3     0 width (25 vs. 20)  0.0199 -0.0095 0.0475
+##        3       2     1 width (25 vs. 20) -0.0180 -0.0514 0.0052
+##        4       2     1 width (25 vs. 20) -0.0088 -0.0750 0.0341
+##        4       3     1 width (25 vs. 20)  0.0092 -0.0324 0.0395
+##        3       2     2 width (25 vs. 20) -0.0377 -0.0868 0.0337
+##        4       2     2 width (25 vs. 20) -0.0645 -0.1505 0.0078
+##        4       3     2 width (25 vs. 20) -0.0269 -0.0811 0.0135</code></pre>
 </div>
 <div id="proportional-odds-models" class="section level2">
 <h2>Proportional odds models</h2>
@@ -1820,12 +1814,12 @@ response variable.</p>
 bayesOrdinalPredsF(propOddsModel, 
                    at = list(Type=c(&quot;Tower&quot;, &quot;Apartment&quot;)))</code></pre>
 <pre><code>##       Type outcome   mean  lower  upper
-##      Tower     Low 0.3418 0.2524 0.4281
-##  Apartment     Low 0.3473 0.1634 0.5331
-##      Tower  Medium 0.3195 0.3025 0.3358
-##  Apartment  Medium 0.3097 0.2675 0.3352
-##      Tower    High 0.3387 0.2518 0.4287
-##  Apartment    High 0.3431 0.1683 0.5353</code></pre>
+##      Tower     Low 0.3392 0.2523 0.4270
+##  Apartment     Low 0.3469 0.1642 0.5436
+##      Tower  Medium 0.3232 0.3074 0.3387
+##  Apartment  Medium 0.3119 0.2735 0.3388
+##      Tower    High 0.3376 0.2534 0.4266
+##  Apartment    High 0.3412 0.1611 0.5412</code></pre>
 <pre class="r"><code>propOddsMarg &lt;- bayesOrdinalMargEffF(propOddsModel, 
                                      marginal_effect = &quot;Infl&quot;, 
                                      start_value     = &quot;Low&quot;, 
@@ -1834,23 +1828,23 @@ bayesOrdinalPredsF(propOddsModel,
 
 propOddsMarg</code></pre>
 <pre><code>##  outcome      Type marg_effect start_val end_val    mean   lower  upper
-##      Low     Tower        Infl       Low    High -0.0063 -0.1722 0.1351
-##      Low Apartment        Infl       Low    High -0.0053 -0.1672 0.1309
-##   Medium     Tower        Infl       Low    High  0.0082 -0.0005 0.0341
-##   Medium Apartment        Infl       Low    High  0.0062 -0.0235 0.0514
-##     High     Tower        Infl       Low    High -0.0019 -0.1526 0.1452
-##     High Apartment        Infl       Low    High -0.0009 -0.1617 0.1415</code></pre>
+##      Low     Tower        Infl       Low    High -0.0041 -0.1486 0.1314
+##      Low Apartment        Infl       Low    High -0.0035 -0.1474 0.1278
+##   Medium     Tower        Infl       Low    High  0.0077 -0.0010 0.0320
+##   Medium Apartment        Infl       Low    High  0.0063 -0.0273 0.0488
+##     High     Tower        Infl       Low    High -0.0036 -0.1645 0.1216
+##     High Apartment        Infl       Low    High -0.0028 -0.1646 0.1257</code></pre>
 <pre class="r"><code>bayesMargCompareF(propOddsMarg)</code></pre>
 <pre><code>##      Type1 Type2 outcome         marg_effect    mean   lower  upper
-##  Apartment Tower     Low Infl (Low vs. High)  0.0009 -0.0173 0.0242
-##  Apartment Tower  Medium Infl (Low vs. High) -0.0019 -0.0362 0.0360
-##  Apartment Tower    High Infl (Low vs. High)  0.0010 -0.0171 0.0240</code></pre>
+##  Apartment Tower     Low Infl (Low vs. High)  0.0006 -0.0198 0.0213
+##  Apartment Tower  Medium Infl (Low vs. High) -0.0014 -0.0370 0.0335
+##  Apartment Tower    High Infl (Low vs. High)  0.0008 -0.0165 0.0213</code></pre>
 </div>
 <div id="list-of-models-currently-supported" class="section level2">
 <h2>List of models currently supported</h2>
 <p><br />
 </p>
-<div class="tabwid"><style>.cl-91740f1e{}.cl-91712f42{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-91725c00{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-91726510{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9172651a{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9172651b{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-91726524{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-91726525{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9172652e{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9172652f{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-91726530{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-91726538{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-91726539{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9172653a{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-91726542{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-91740f1e"><thead><tr style="overflow-wrap:break-word;"><th class="cl-91726510"><p class="cl-91725c00"><span class="cl-91712f42">Class</span></p></th><th class="cl-9172651a"><p class="cl-91725c00"><span class="cl-91712f42">Family</span></p></th><th class="cl-9172651b"><p class="cl-91725c00"><span class="cl-91712f42">Links</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-91726524"><p class="cl-91725c00"><span class="cl-91712f42">stanreg</span></p></td><td class="cl-91726525"><p class="cl-91725c00"><span class="cl-91712f42">beta</span></p></td><td class="cl-9172652e"><p class="cl-91725c00"><span class="cl-91712f42">logit; probit; cloglog</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-91726524"><p class="cl-91725c00"><span class="cl-91712f42">stanreg</span></p></td><td class="cl-91726525"><p class="cl-91725c00"><span class="cl-91712f42">binomial</span></p></td><td class="cl-9172652e"><p class="cl-91725c00"><span class="cl-91712f42">logit; probit; cloglog</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-91726524"><p class="cl-91725c00"><span class="cl-91712f42">stanreg</span></p></td><td class="cl-91726525"><p class="cl-91725c00"><span class="cl-91712f42">Gamma</span></p></td><td class="cl-9172652e"><p class="cl-91725c00"><span class="cl-91712f42">inverse; log; identity</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9172652f"><p class="cl-91725c00"><span class="cl-91712f42">stanreg</span></p></td><td class="cl-91726530"><p class="cl-91725c00"><span class="cl-91712f42">gaussian</span></p></td><td class="cl-91726538"><p class="cl-91725c00"><span class="cl-91712f42">identity</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-91726524"><p class="cl-91725c00"><span class="cl-91712f42">stanreg</span></p></td><td class="cl-91726525"><p class="cl-91725c00"><span class="cl-91712f42">neg_binomial_2</span></p></td><td class="cl-9172652e"><p class="cl-91725c00"><span class="cl-91712f42">identity; log; sqrt</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-91726524"><p class="cl-91725c00"><span class="cl-91712f42">stanreg</span></p></td><td class="cl-91726525"><p class="cl-91725c00"><span class="cl-91712f42">poisson</span></p></td><td class="cl-9172652e"><p class="cl-91725c00"><span class="cl-91712f42">identity; log; sqrt</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-91726539"><p class="cl-91725c00"><span class="cl-91712f42">stanreg; polr</span></p></td><td class="cl-9172653a"><p class="cl-91725c00"><span class="cl-91712f42">binomial</span></p></td><td class="cl-91726542"><p class="cl-91725c00"><span class="cl-91712f42">logit; probit; cloglog</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-55c5c292{}.cl-55c2dece{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-55c40a42{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-55c41352{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c4135c{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c41366{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c41367{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c41368{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c41370{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c41371{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c4137a{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c4137b{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c4137c{width:1.134in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c41384{width:1.364in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-55c41385{width:1.635in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-55c5c292"><thead><tr style="overflow-wrap:break-word;"><th class="cl-55c41352"><p class="cl-55c40a42"><span class="cl-55c2dece">Class</span></p></th><th class="cl-55c4135c"><p class="cl-55c40a42"><span class="cl-55c2dece">Family</span></p></th><th class="cl-55c41366"><p class="cl-55c40a42"><span class="cl-55c2dece">Links</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-55c41367"><p class="cl-55c40a42"><span class="cl-55c2dece">stanreg</span></p></td><td class="cl-55c41368"><p class="cl-55c40a42"><span class="cl-55c2dece">beta</span></p></td><td class="cl-55c41370"><p class="cl-55c40a42"><span class="cl-55c2dece">logit; probit; cloglog</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-55c41367"><p class="cl-55c40a42"><span class="cl-55c2dece">stanreg</span></p></td><td class="cl-55c41368"><p class="cl-55c40a42"><span class="cl-55c2dece">binomial</span></p></td><td class="cl-55c41370"><p class="cl-55c40a42"><span class="cl-55c2dece">logit; probit; cloglog</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-55c41367"><p class="cl-55c40a42"><span class="cl-55c2dece">stanreg</span></p></td><td class="cl-55c41368"><p class="cl-55c40a42"><span class="cl-55c2dece">Gamma</span></p></td><td class="cl-55c41370"><p class="cl-55c40a42"><span class="cl-55c2dece">inverse; log; identity</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-55c41371"><p class="cl-55c40a42"><span class="cl-55c2dece">stanreg</span></p></td><td class="cl-55c4137a"><p class="cl-55c40a42"><span class="cl-55c2dece">gaussian</span></p></td><td class="cl-55c4137b"><p class="cl-55c40a42"><span class="cl-55c2dece">identity</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-55c41367"><p class="cl-55c40a42"><span class="cl-55c2dece">stanreg</span></p></td><td class="cl-55c41368"><p class="cl-55c40a42"><span class="cl-55c2dece">neg_binomial_2</span></p></td><td class="cl-55c41370"><p class="cl-55c40a42"><span class="cl-55c2dece">identity; log; sqrt</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-55c41367"><p class="cl-55c40a42"><span class="cl-55c2dece">stanreg</span></p></td><td class="cl-55c41368"><p class="cl-55c40a42"><span class="cl-55c2dece">poisson</span></p></td><td class="cl-55c41370"><p class="cl-55c40a42"><span class="cl-55c2dece">identity; log; sqrt</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-55c4137c"><p class="cl-55c40a42"><span class="cl-55c2dece">stanreg; polr</span></p></td><td class="cl-55c41384"><p class="cl-55c40a42"><span class="cl-55c2dece">binomial</span></p></td><td class="cl-55c41385"><p class="cl-55c40a42"><span class="cl-55c2dece">logit; probit; cloglog</span></p></td></tr></tbody></table></div>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

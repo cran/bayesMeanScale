@@ -1,4 +1,8 @@
 
+# bayesMeanScale 0.2.1
+
+* Fixed R CMD check issue.
+
 # bayesMeanScale 0.2.0
 
 * Compute instantaneous rates of change

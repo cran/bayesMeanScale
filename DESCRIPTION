@@ -1,7 +1,7 @@
 Package: bayesMeanScale
 Type: Package
 Title: Bayesian Post-Estimation on the Mean Scale
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(person(given  = "David M.",
                     family = "Dalenberg",
                     role   = c("aut", "cre"),
@@ -19,8 +19,8 @@ Suggests: flextable (>= 0.9.5), knitr (>= 1.45), MASS (>= 7.3-60.2),
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2024-12-20 14:06:13 UTC; dalenbed
+Packaged: 2025-01-03 14:59:31 UTC; dalenbed
 Author: David M. Dalenberg [aut, cre]
 Maintainer: David M. Dalenberg <dalenbe2@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-12-20 14:40:02 UTC
+Date/Publication: 2025-01-08 13:30:02 UTC

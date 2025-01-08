@@ -1,6 +1,6 @@
 
 countPredTableF <- function(preds, model_data, counts, at_vars, at_values, hdi_interval, centrality, digits, ci, at_means){
-  
+
   centralityF <- eval(parse(text=centrality))
   
   group_vars <- c(at_vars, "count")

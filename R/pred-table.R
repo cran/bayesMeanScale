@@ -1,6 +1,6 @@
 
 predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, centrality, digits, ci, at_means){
-  
+
   centralityF <- eval(parse(text=centrality))
   
   if(at_means==F){

@@ -49,7 +49,7 @@ The number of rows of data to average over for the predictions. Defaults to all 
 }
 }
 \value{
-A list of class "bayes_mean_scale_pred" with the following components: 
+A list of class "bayesmeanscale_pred" with the following components: 
 
 \item{predTable}{
 summary table of the predictions
@@ -60,7 +60,7 @@ posterior draws of the predictions
 
 }
 \details{
-Currently, the following families of fixed-effect models fit using "rstanarm" are supported: 'beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', and 'poisson.' Future versions of the package will contain support for additional models.
+The following families of fixed-effect models fit using "rstanarm" are supported: 'beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', and 'poisson.'
 }
 \author{
 David Dalenberg
@@ -92,7 +92,7 @@ bayesPredsF(m1,
             at       = list(arsenic = c(.82, 1.3)), 
             at_means = TRUE,
             n_draws  = 500)
-            
+         
 }
             
 }
