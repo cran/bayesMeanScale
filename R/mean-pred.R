@@ -115,3 +115,109 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
   return(meanPreds)
 
 }
+
+
+
+meanPredDFMethodF <- function(new_data, at, draws, link_function, new_formula, at_means){
+  
+  # make the new model matrix #
+  
+  modelMatrix   <- model.matrix(new_formula, data=new_data)
+  
+  
+  # get the draws from the joint posterior #
+  
+  modelDrawsOrg <- data.table::as.data.table(draws)
+  
+  # check that new model matrix doesn't have any columns that aren't in joint posterior #
+  
+  if(!all(dimnames(modelMatrix)[[2]] %in% names(modelDrawsOrg))){
+    stop("Something is wrong with the model matrix!")
+  }
+  
+  # make sure to only get joint posterior columns that match up with model matrix #
+  
+  betaDraws <- modelDrawsOrg %>%
+    .[, .SD, .SDcols = dimnames(modelMatrix)[[2]]] %>%
+    as.matrix()
+  
+  # make sure model matrix lines up with draws matrix #
+  
+  if(at_means==F){
+    
+    modelMatrixNew <- modelMatrix %>%
+      data.table::as.data.table() %>%
+      .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
+      as.matrix()
+    
+  }
+  
+  if(at_means==T & !is.null(at)){
+    
+    atVars <- names(at)
+    
+    atVarsNew <- paste0(atVars, "_new")
+    data.table::setnames(new_data, old=names(new_data[, ..atVars]), new=atVarsNew)
+    
+    modelMatrixNew <- modelMatrix %>%
+      data.table::as.data.table() %>%
+      .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
+      cbind(new_data[, ..atVarsNew]) %>%
+      .[, lapply(.SD, mean), by=atVarsNew] %>%
+      .[, !..atVarsNew] %>%
+      as.matrix()
+    
+    data.table::setnames(new_data, old=names(new_data[, ..atVarsNew]), new=atVars)
+    
+  }
+  
+  if(at_means==T & is.null(at)){
+    
+    modelMatrixNew <- modelMatrix %>%
+      data.table::as.data.table() %>%
+      .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
+      .[, lapply(.SD, mean)] %>%
+      as.matrix()
+    
+  }
+  
+  # compute the linear predictor #
+  
+  Z <- modelMatrixNew %*% t(betaDraws)
+  
+  # apply the inverse link function #
+  
+  if(link_function=="logit"){
+    meanPreds <- exp(Z) / (1 + exp(Z))
+  }
+  
+  if(link_function=='probit'){
+    meanPreds <- pnorm(Z, mean=0, sd=1)
+  }
+  
+  if(link_function=='cloglog'){
+    meanPreds <- 1 - exp(-exp(Z))
+  }
+  
+  if(link_function=="log"){
+    meanPreds <- exp(Z)
+  }
+  
+  if(link_function=='identity'){
+    meanPreds <- Z
+  }
+  
+  if(link_function=="inverse"){
+    meanPreds <- 1/Z
+  }
+  
+  if(link_function=='sqrt'){
+    meanPreds <- Z^2
+  }
+  
+  # output #
+  
+  return(meanPreds)
+  
+}
+

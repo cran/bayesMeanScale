@@ -1,5 +1,7 @@
 \name{bayesMargEffF}
 \alias{bayesMargEffF}
+\alias{bayesMargEffF.stanreg}
+\alias{bayesMargEffF.data.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Bayesian marginal effects on the mean scale.
@@ -8,7 +10,10 @@ Bayesian marginal effects on the mean scale.
 Computes Bayesian marginal effects on the mean scale for models fit using the package "rstanarm". Marginal effects can be averaged over the values of the covariates in the data (average marginal effects), or the covariates can be held at their means (marginal effects at the means). Also, "at" values can be specified to fix covariates at particular values. The marginal effects can be specified in terms of discrete changes or instantaneous rates of change.
 }
 \usage{
-bayesMargEffF(model,
+
+bayesMargEffF(model, ...)
+
+\method{bayesMargEffF}{stanreg}(model,
               n_draws         = 2000,
               marginal_effect,
               start_value,
@@ -19,12 +24,40 @@ bayesMargEffF(model,
               digits          = 4,
               at              = NULL,
               at_means        = FALSE,
-              h               = .0001)
+              h               = .0001,
+              ...)
+
+\method{bayesMargEffF}{data.frame}(model,
+              model_data,
+              model_formula,
+              link_function,
+              n_draws         = 2000,
+              marginal_effect,
+              start_value,
+              end_value,
+              ci              = .95,
+              hdi_interval    = TRUE,
+              centrality      = 'mean',
+              digits          = 4,
+              at              = NULL,
+              at_means        = FALSE,
+              h               = .0001,
+              ...)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{model}{
-A model object of class "stanreg."
+\item{model}{
+A model object of class "stanreg" or an object of class "data.frame" that contains the joint posterior.
+}
+\item{model_data}{
+Object of class "data.frame" that contains the data used to fit the model. 
+}
+\item{model_formula}{
+Object of class "formula".
+}
+\item{link_function}{
+The link function used to fit the model. Current options are "logit", "probit", "cloglog", "log", "inverse", "sqrt", or "identity".
 }
 \item{n_draws}{
 The number of draws to take from the joint posterior distribution.
@@ -59,6 +92,9 @@ If FALSE, the default, the marginal effects are averaged across the rows of the 
 }
 \item{h}{
 Step size for calculating the approximate instantaneous rate of change.
+}
+\item{...}{
+Arguments passed to method.
 }
 }
 \value{

@@ -1,4 +1,8 @@
 
+# bayesMeanScale 0.2.2
+
+* Functionality to pass joint posterior from a model into bayesMargEffF, thus generalizing the function to many more use cases
+
 # bayesMeanScale 0.2.1
 
 * Fixed R CMD check issue.

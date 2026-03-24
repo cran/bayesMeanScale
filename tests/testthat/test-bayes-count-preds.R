@@ -7,7 +7,7 @@ test_that("make sure bayesCountPredsF is working properly", {
   
   set.seed(200)
   
-  crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+  crabs <- read.table("https://stat4ds.rwth-aachen.de/data/Crabs.dat", header=T)
   
   poissonModel  <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0, chains=2, iter=500))
   negBinomModel <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, chains=2, iter=500))

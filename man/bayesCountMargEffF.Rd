@@ -92,7 +92,7 @@ Long, J. Scott and Jeremy Freese. 2001. "Predicted Probabilities for Count Model
 
 if(require(rstanarm)){
 
-crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", 
+crabs <- read.table("https://stat4ds.rwth-aachen.de/data/Crabs.dat", 
                     header = TRUE)
 
 poissonModel  <- stan_glm(sat ~ weight + width, 

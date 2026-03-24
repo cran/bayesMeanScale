@@ -7,7 +7,11 @@ knitr::opts_chunk$set(
 
 ## ----results='hide', message=F------------------------------------------------
 
-lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr', 'MASS'), function(x) base::library(x, character.only=T))
+if(!all(sapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr', 'MASS'), function(x) require(x, character.only=T, quietly=T)))){
+  knitr::opts_chunk$set(eval=F)
+} else{
+    sapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr', 'MASS'), function(x) library(x, character.only=T, quietly=T))
+}
 
 
 ## -----------------------------------------------------------------------------
@@ -39,7 +43,7 @@ bayesPredsF(binomialModel,
 
 ## -----------------------------------------------------------------------------
 
-crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+crabs <- read.table("https://stat4ds.rwth-aachen.de/data/Crabs.dat", header=T)
 
 poissonModel  <- stan_glm(sat ~ weight + width, 
                           data    = crabs, 

@@ -28,7 +28,7 @@ test_that("test that bayesMargCompareF runs without error and without warning", 
                                     at              = list(educ=c(0, 5, 8)),
                                     n_draws         = 500)
   
-  crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+  crabs <- read.table("https://stat4ds.rwth-aachen.de/data/Crabs.dat", header=T)
   
   poissonModel  <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width + color + spine, data=crabs, family=poisson, refresh=0, chains=2, iter=500))
   
